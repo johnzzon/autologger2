@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Autolog{% endblock %}
+
+{% block body %}
+
+<div class="content">
+    <h1>⏱ Autolog</h1>
+    <div>
+        <a href="{{ yesterday_link }}">-</a>
+        {{ date }}
+        <a href="{{ tomorrow_link }}">+</a>
+    </div>
+    <ul>
+        {% for event in events %}
+            <li>
+                {{ event.getSummary() }} ({{ event.getDurationFormatted('%hh %im') }})
+                {% set query_params = { 'duration': event.getDurationFormatted('%hh %im') } %}
+                {% if event.isJiraIssue() %}
+                    <a class="jira-link" target="_blank" href="{{ event.getJiraUrl() }}">View in Jira</a>
+                    {% set query_params = query_params|merge({ 'jira': event.getJiraIssue() }) %}
+                {% endif %}
+                <a target="_blank" href="{{ path('time_log', query_params) }}">⏱</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <span>Total: {{ total_duration }}</span>
+</div>
+{% endblock %}
