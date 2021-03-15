@@ -84,8 +84,15 @@ class Event
      */
     public function getSummary(): string
     {
-        $this->getJiraUrl();
         return $this->summary;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShortSummary(): string
+    {
+       return preg_replace('/^(?<project>[A-Z\s]*):/', '', $this->summary);
     }
 
     /**
