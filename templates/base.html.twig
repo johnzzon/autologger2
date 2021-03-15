@@ -13,4 +13,16 @@
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </body>
+    <script>
+      (function() {
+        window._harvestPlatformConfig = {
+          "applicationName": "Unlogged",
+        };
+        var s = document.createElement('script');
+        s.src = '//platform.harvestapp.com/assets/platform.js';
+        s.async = true;
+        var ph = document.getElementsByTagName('script')[0];
+        ph.parentNode.insertBefore(s, ph);
+      })();
+    </script>
 </html>

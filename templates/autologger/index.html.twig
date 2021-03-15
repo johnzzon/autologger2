@@ -24,6 +24,11 @@
                     {% endif %}
                     <a target="_blank"
                        href="{{ path('time_log', query_params) }}">⏱</a>
+                    <div class="harvest-timer"
+                         data-item='{
+                         "id": "{{ event.getJiraIssue }}",
+                         "name": "{{ event.getSummary }}"}'>
+                    </div>
                 </li>
             {% endfor %}
         </ul>
