@@ -33,6 +33,10 @@ class EventManager
             fopen($calendar_link,'rb')
         );
 
+        if (empty($vcalendar->VEVENT)) {
+          return;
+        }
+
         foreach ($vcalendar->VEVENT as $vevent) {
             /** @var Vevent $vevent */
             if (!$vevent->isInTimeRange($date_start, $date_end)) {
