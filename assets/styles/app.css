@@ -1,3 +1,51 @@
 body {
-    background-color: lightgray;
+  background-color: #fafafa;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 70vh;
+}
+
+h1 {
+  margin-top: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.alert {
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.alert-success {
+  background: #75cb7a;
+  color: #0c4400;
+}
+
+.alert-error {
+  background: #AA3333;
+}
+
+.content {
+  background-color: #fff;
+  border-radius: 15px;
+  box-shadow: 0 37.125px 70px -12.125px rgba(0, 0, 0, 0.3);
+  color: #333;
+  padding: 30px;
+  margin: 1em auto;
+  max-width: 500px;
+  width: 95%;
+  font: 18px/1.5 sans-serif;
+}
+
+.jira-link {
+  height: 25px;
+  width: 25px;
+  display: inline-block;
+  text-indent: -10000px;
+  background-image: url("../../public/jira.png");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
