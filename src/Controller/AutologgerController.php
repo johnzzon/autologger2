@@ -34,8 +34,6 @@ class AutologgerController extends AbstractController
         $tomorrow->modify('+1 day');
 
         $ical_link = getenv('APP_ICAL_LINK');
-        var_dump($ical_link);
-        die();
         $event_manager = new EventManager($ical_link, $date_filter_start, $date_filter_end);
         $events = $event_manager->getAggregatedEvents();
 
