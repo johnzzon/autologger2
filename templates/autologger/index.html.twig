@@ -11,10 +11,25 @@
             {{ date }}
             <a href="{{ tomorrow_link }}">+</a>
         </div>
-        <table>
+        <table class="events">
             {% for event in events %}
                 <tr>
                     <td>
+                        {% set query_params = { 'duration': event.getDurationFormatted('%hh %im') } %}
+                        {% if event.isJiraIssue() %}
+                            {% set query_params = query_params|merge({ 'jira': event.getJiraIssue() }) %}
+                            <a target="_blank"
+                               href="{{ path('time_log', query_params) }}">⏱</a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="harvest-timer"
+                             data-item='{
+                         "id": "{{ event.getJiraIssue }}",
+                         "name": "{{ event.getShortSummary }}"}'>
+                        </div>
+                    </td>
+                    <td class="events__summary">
                         {{ event.getProject }}:
                         {% if event.isJiraIssue() %}
                             <a target="_blank"
@@ -25,21 +40,6 @@
                     </td>
                     <td>
                         {{ event.getDurationFormatted('%hh %im') }}
-                    </td>
-                    <td>
-                        <div class="harvest-timer"
-                             data-item='{
-                         "id": "{{ event.getJiraIssue }}",
-                         "name": "{{ event.getSummary }}"}'>
-                        </div>
-                    </td>
-                    <td>
-                        {% set query_params = { 'duration': event.getDurationFormatted('%hh %im') } %}
-                        {% if event.isJiraIssue() %}
-                            {% set query_params = query_params|merge({ 'jira': event.getJiraIssue() }) %}
-                            <a target="_blank"
-                               href="{{ path('time_log', query_params) }}">⏱</a>
-                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
