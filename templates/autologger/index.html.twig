@@ -14,16 +14,20 @@
         <ul>
             {% for event in events %}
                 <li>
-                    {{ event.getSummary() }}
+                    {{ event.getProject }}:
+                    {% if event.isJiraIssue() %}
+                        <a target="_blank"
+                           href="{{ event.getJiraUrl() }}">{{ event.getJiraIssue }}</a>
+                    {% else %}
+                        {{ event.getShortSummary }}
+                    {% endif %}
                     ({{ event.getDurationFormatted('%hh %im') }})
                     {% set query_params = { 'duration': event.getDurationFormatted('%hh %im') } %}
                     {% if event.isJiraIssue() %}
-                        <a class="jira-link" target="_blank"
-                           href="{{ event.getJiraUrl() }}">View in Jira</a>
                         {% set query_params = query_params|merge({ 'jira': event.getJiraIssue() }) %}
+                        <a target="_blank"
+                           href="{{ path('time_log', query_params) }}">⏱</a>
                     {% endif %}
-                    <a target="_blank"
-                       href="{{ path('time_log', query_params) }}">⏱</a>
                     <div class="harvest-timer"
                          data-item='{
                          "id": "{{ event.getJiraIssue }}",
