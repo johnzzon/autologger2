@@ -11,31 +11,39 @@
             {{ date }}
             <a href="{{ tomorrow_link }}">+</a>
         </div>
-        <ul>
+        <table>
             {% for event in events %}
-                <li>
-                    {{ event.getProject }}:
-                    {% if event.isJiraIssue() %}
-                        <a target="_blank"
-                           href="{{ event.getJiraUrl() }}">{{ event.getJiraIssue }}</a>
-                    {% else %}
-                        {{ event.getShortSummary }}
-                    {% endif %}
-                    ({{ event.getDurationFormatted('%hh %im') }})
-                    {% set query_params = { 'duration': event.getDurationFormatted('%hh %im') } %}
-                    {% if event.isJiraIssue() %}
-                        {% set query_params = query_params|merge({ 'jira': event.getJiraIssue() }) %}
-                        <a target="_blank"
-                           href="{{ path('time_log', query_params) }}">⏱</a>
-                    {% endif %}
-                    <div class="harvest-timer"
-                         data-item='{
+                <tr>
+                    <td>
+                        {{ event.getProject }}:
+                        {% if event.isJiraIssue() %}
+                            <a target="_blank"
+                               href="{{ event.getJiraUrl() }}">{{ event.getJiraIssue }}</a>
+                        {% else %}
+                            {{ event.getShortSummary }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ event.getDurationFormatted('%hh %im') }}
+                    </td>
+                    <td>
+                        <div class="harvest-timer"
+                             data-item='{
                          "id": "{{ event.getJiraIssue }}",
                          "name": "{{ event.getSummary }}"}'>
-                    </div>
-                </li>
+                        </div>
+                    </td>
+                    <td>
+                        {% set query_params = { 'duration': event.getDurationFormatted('%hh %im') } %}
+                        {% if event.isJiraIssue() %}
+                            {% set query_params = query_params|merge({ 'jira': event.getJiraIssue() }) %}
+                            <a target="_blank"
+                               href="{{ path('time_log', query_params) }}">⏱</a>
+                        {% endif %}
+                    </td>
+                </tr>
             {% endfor %}
-        </ul>
+        </table>
         <span>Total: {{ total_duration }}</span>
     </div>
 {% endblock %}
