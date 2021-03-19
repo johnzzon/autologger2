@@ -15,7 +15,7 @@
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.8",
-        "lesstif/php-jira-rest-client": "^2.5",
+        "lesstif/php-jira-rest-client": "^1",
         "myclabs/deep-copy": "^1.10",
         "phpdocumentor/reflection-docblock": "^5.2",
         "sabre/vobject": "^4.3",

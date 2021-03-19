@@ -87,9 +87,6 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
     },
-    "graham-campbell/result-type": {
-        "version": "v1.0.1"
-    },
     "guzzlehttp/guzzle": {
         "version": "6.5.5"
     },

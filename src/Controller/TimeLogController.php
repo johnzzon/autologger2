@@ -33,10 +33,6 @@ class TimeLogController extends AbstractController
         // Log to Jira.
         if ($jira_issue) {
             try {
-                // Handle GU issues.
-                if (strpos($jira_issue,'WEBUTV') !== FALSE || strpos($jira_issue,'WK') !== FALSE) {
-                    putenv('JIRA_HOST=https://jiragu.atlassian.net');
-                }
                 $worklog = new Worklog();
 
                 $worklog->setStarted(new DateTime())
