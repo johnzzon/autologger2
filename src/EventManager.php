@@ -87,6 +87,10 @@ class EventManager
             $aggregated_events[] = $event_clone;
         }
 
+        uasort($aggregated_events, static function (Event $a, Event $b) {
+            return $a->getSummary() > $b->getSummary();
+        });
+
         return $aggregated_events;
     }
 

@@ -92,7 +92,7 @@ class Event
      */
     public function getShortSummary(): string
     {
-       return preg_replace('/^(?<project>[A-Z\s]*):/', '', $this->summary);
+       return preg_replace('/^(?<project>[A-Z\s]*): /', '', $this->summary);
     }
 
     /**

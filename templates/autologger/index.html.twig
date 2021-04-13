@@ -33,7 +33,7 @@
                         {{ event.getProject }}:
                         {% if event.isJiraIssue() %}
                             <a target="_blank"
-                               href="{{ event.getJiraUrl() }}">{{ event.getJiraIssue }}</a>
+                               href="{{ event.getJiraUrl() }}">{{ event.shortSummary }}</a>
                         {% else %}
                             {{ event.getShortSummary }}
                         {% endif %}
