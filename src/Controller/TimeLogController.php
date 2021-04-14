@@ -25,6 +25,7 @@ class TimeLogController extends AbstractController
     public function index(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $jira_issue = $request->query->get('jira');
+        $fibery_moment = $request->query->get('fibery');
         $duration = $request->query->get('duration');
         if (!$duration) {
             throw new RuntimeException('Missing required parameters.');
@@ -45,6 +46,11 @@ class TimeLogController extends AbstractController
             } catch (JiraException $e) {
                 $this->addFlash('error', $e->getMessage());
             }
+        }
+
+        // Log to Fibery.
+        if ($fibery_moment) {
+            $this->addFlash('success', "Tidlogg created for #$fibery_moment.");
         }
 
         // Log to Harvest.

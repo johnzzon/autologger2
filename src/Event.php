@@ -46,6 +46,13 @@ class Event
     protected $jiraIssue;
 
     /**
+     * The Fibery moment identifier.
+     *
+     * @var string
+     */
+    protected $fiberyMoment;
+
+    /**
      * The UUID for this event.
      *
      * @var string
@@ -65,6 +72,7 @@ class Event
         $this->summary = $vevent->SUMMARY->__toString();
         $this->project = $this->parseProject();
         $this->jiraIssue = $this->parseJiraIssue();
+        $this->fiberyMoment = $this->parseFiberyMoment();
         $this->startDate = new DateTime($vevent->DTSTART);
         $this->endDate = new DateTime($vevent->DTEND);
     }
@@ -148,6 +156,18 @@ class Event
         return FALSE;
     }
 
+    /**
+     * Get the Jira issue URL.
+     *
+     * @return bool|string
+     */
+    public function getFiberyUrl()
+    {
+        if ($this->isFiberyMoment()) {
+            return 'https://kodamera.fibery.io/Projekthantering/Moment/'. $this->fiberyMoment;
+        }
+        return FALSE;
+    }
 
     /**
      * Returns a Jira issue identifier or FALSE if not a Jira issue.
@@ -163,6 +183,19 @@ class Event
     }
 
     /**
+     * Returns a Fibery moment identifier or FALSE if not a Fibery moment.
+     *
+     * @return bool|string
+     */
+    protected function parseFiberyMoment()
+    {
+        if (preg_match('/#(?<fibery>[\d]+)/', $this->summary, $matches)) {
+            return $matches['fibery'];
+        }
+        return FALSE;
+    }
+
+    /**
      * Returns whether this task is a Jira issue or not.
      *
      * @return bool
@@ -170,6 +203,16 @@ class Event
     public function isJiraIssue(): bool
     {
         return (bool)$this->jiraIssue;
+    }
+
+    /**
+     * Returns whether this task is a Fibery moment or not.
+     *
+     * @return bool
+     */
+    public function isFiberyMoment(): bool
+    {
+        return (bool)$this->fiberyMoment;
     }
 
 
@@ -190,6 +233,14 @@ class Event
     public function getJiraIssue(): string
     {
         return $this->jiraIssue;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFiberyMoment(): string
+    {
+        return $this->fiberyMoment;
     }
 
 }

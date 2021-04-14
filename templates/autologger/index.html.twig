@@ -21,6 +21,11 @@
                             <a target="_blank"
                                href="{{ path('time_log', query_params) }}">⏱</a>
                         {% endif %}
+                        {% if event.isFiberyMoment() %}
+                            {% set query_params = query_params|merge({ 'fibery': event.getFiberyMoment() }) %}
+                            <a target="_blank"
+                               href="{{ path('time_log', query_params) }}">⏱</a>
+                        {% endif %}
                     </td>
                     <td>
                         <div class="harvest-timer"
@@ -34,6 +39,9 @@
                         {% if event.isJiraIssue() %}
                             <a target="_blank"
                                href="{{ event.getJiraUrl() }}">{{ event.shortSummary }}</a>
+                        {% elseif event.isFiberyMoment() %}
+                            <a target="_blank"
+                               href="{{ event.getFiberyUrl() }}">{{ event.shortSummary }}</a>
                         {% else %}
                             {{ event.getShortSummary }}
                         {% endif %}
