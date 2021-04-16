@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\Fibery;
 use DateTime;
 use JiraRestApi\Issue\IssueService;
 use JiraRestApi\Issue\Worklog;
@@ -9,6 +10,7 @@ use JiraRestApi\JiraException;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TimeLogController extends AbstractController
@@ -22,7 +24,7 @@ class TimeLogController extends AbstractController
      *
      * @throws \Exception
      */
-    public function index(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function index(Request $request, Fibery $fibery): Response
     {
         $jira_issue = $request->query->get('jira');
         $fibery_moment = $request->query->get('fibery');
@@ -50,19 +52,15 @@ class TimeLogController extends AbstractController
 
         // Log to Fibery.
         if ($fibery_moment) {
+            $fibery->logTime($fibery_moment, $request->query->get('date'), $request->query->get('duration'), $request->query->get('message'));
             $this->addFlash('success', "Tidlogg created for #$fibery_moment.");
         }
 
-        // Log to Harvest.
-        // TODO: Harvest API implementation.
-        // $harvest = new \BestIt\Harvest\Client(getenv('HARVEST_SERVER_URL'), getenv('HARVEST_USERNAME'), getenv('HARVEST_PASSWORD'));
-
-        // Get all users.
-        // $projects = $harvest->timesheet()->create();
-        // dd($projects);
-
-        return $this->render('time_log/index.html.twig', [
-            'controller_name' => 'TimeLogController',
-        ]);
+        return $this->render(
+            'time_log/index.html.twig',
+            [
+                'controller_name' => 'TimeLogController',
+            ]
+        );
     }
 }

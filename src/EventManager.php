@@ -108,7 +108,10 @@ class EventManager
         foreach ($this->getEvents() as $event) {
             $total_duration->add($event->getDurationInterval());
         }
-        return $zero->diff($total_duration)->format('%h:%I');
+        $interval = $zero->diff($total_duration);
+        $hours = $interval->h;
+        $minutes = $interval->i;
+        return $hours + ($minutes / 60);
     }
 
 }

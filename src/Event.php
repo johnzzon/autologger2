@@ -106,6 +106,14 @@ class Event
     /**
      * @return string
      */
+    public function getSummaryMessage(): string
+    {
+       return preg_replace('/^#\d+\s/', '', $this->getShortSummary());
+    }
+
+    /**
+     * @return string
+     */
     private function parseProject(): string
     {
         if (preg_match('/^(?<project>[A-Z\s]*):/', $this->summary, $matches)) {
@@ -138,6 +146,21 @@ class Event
     {
         $interval = $this->startDate->diff($this->endDate);
         return $interval->format($format);
+    }
+
+    /**
+     * Get event duration formatted.
+     *
+     * @param string $format
+     *
+     * @return string
+     */
+    public function getDurationHours(): string
+    {
+        $interval = $this->startDate->diff($this->endDate);
+        $hours = $interval->h;
+        $minutes = $interval->i;
+        return $hours + ($minutes / 60);
     }
 
     /**

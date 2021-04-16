@@ -15,16 +15,24 @@
             {% for event in events %}
                 <tr>
                     <td>
-                        {% set query_params = { 'duration': event.getDurationFormatted('%hh %im') } %}
                         {% if event.isJiraIssue() %}
-                            {% set query_params = query_params|merge({ 'jira': event.getJiraIssue() }) %}
+                            {% set jira_query_params = {
+                                'duration': event.getDurationFormatted('%hh %im'),
+                                'jira': event.getJiraIssue()
+                            } %}
                             <a target="_blank"
-                               href="{{ path('time_log', query_params) }}">⏱</a>
+                               href="{{ path('time_log', jira_query_params) }}">⏱</a>
                         {% endif %}
+
                         {% if event.isFiberyMoment() %}
-                            {% set query_params = query_params|merge({ 'fibery': event.getFiberyMoment() }) %}
+                            {% set fibery_query_params = {
+                                'duration': event.durationHours,
+                                'fibery': event.fiberyMoment,
+                                'message': event.summaryMessage,
+                                'date': date,
+                            } %}
                             <a target="_blank"
-                               href="{{ path('time_log', query_params) }}">⏱</a>
+                               href="{{ path('time_log', fibery_query_params) }}">⏱</a>
                         {% endif %}
                     </td>
                     <td>
@@ -47,7 +55,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{ event.getDurationFormatted('%hh %im') }}
+                        {{ event.getDurationHours() }} h
                     </td>
                 </tr>
             {% endfor %}
