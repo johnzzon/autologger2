@@ -4,7 +4,6 @@
 namespace App\Service;
 
 use GuzzleHttp\Client;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 class Fibery
@@ -43,7 +42,14 @@ class Fibery
             $moment_cache->set($moment);
         }
         $moment = $moment_cache->get();
-        $this->createTimelog($moment['uuid'], $moment['project'], $date, $time_spent, $message);
+
+        $timelog = $this->findTimelog($moment['uuid'], $date, $message);
+
+        if ($timelog !== null) {
+            $this->updateTimelog($timelog, $time_spent);
+        } else {
+            $this->createTimelog($moment['uuid'], $date, $time_spent, $message);
+        }
     }
 
     /**
@@ -63,12 +69,7 @@ class Fibery
         "q/select": [
           "fibery/id",
           "fibery/public-id",
-          "Projekthantering/name",
-          {
-            "Projekthantering/Projekt": [
-              "fibery/id"
-            ]
-          }
+          "Projekthantering/name"
         ],
         "q/where": [
           "=",
@@ -104,7 +105,6 @@ JSON;
 
         return [
             'uuid' => $response_data[0]['result'][0]['fibery/id'] ?? null,
-            'project' => $response_data[0]['result'][0]['Projekthantering/Projekt']['fibery/id'] ?? null,
         ];
     }
 
@@ -112,7 +112,12 @@ JSON;
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
      */
-    public function createTimelog(string $moment_uuid, string $project_uuid, string $date, string $time_spent, string $message) {
+    public function createTimelog(
+        string $moment_uuid,
+        string $date,
+        string $time_spent,
+        string $message
+    ) {
         $fibery_user = getenv('FIBERY_USER');
 
         $body = <<<JSON
@@ -130,9 +135,6 @@ JSON;
         },
         "Projekthantering/Moment": {
           "fibery/id": "$moment_uuid"
-        },
-        "Projekthantering/Projekt": {
-          "fibery/id": "$project_uuid"
         }
       }
     }
@@ -156,6 +158,105 @@ JSON;
             throw new \Exception("Shit didn't work yo");
         }
 
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     */
+    public function findTimelog(string $moment_uuid, string $date, string $message)
+    {
+        $fibery_user = getenv('FIBERY_USER');
+
+        $body = <<<JSON
+[
+  {
+    "command": "fibery.entity/query",
+    "args": {
+      "query": {
+        "q/from": "Projekthantering/Tidlogg",
+        "q/select": [
+          "fibery/id",
+          "Projekthantering/Beräknade timmar",
+          "Projekthantering/Dag",
+          "Projekthantering/name"
+        ],
+        "q/where": [
+          "q/and",
+          ["=", [ "Projekthantering/user", "fibery/id" ], "\$user"],
+          ["=", [ "Projekthantering/Moment", "fibery/id"], "\$moment"],
+          ["=", [ "Projekthantering/Dag"], "\$day"],
+          ["=", [ "Projekthantering/name"], "\$message"]
+        ],
+        "q/limit": 20
+      },
+      "params": {
+        "\$user": "$fibery_user",
+        "\$moment": "$moment_uuid",
+        "\$day": "$date",
+        "\$message": "Autolog: $message"
+      }
+    }
+  }
+]
+JSON;
+
+        $options = [
+            'headers' => [
+                'Authorization' => 'Token '.getenv('FIBERY_TOKEN'),
+                'Content-Type' => 'application/json',
+            ],
+            'body' => $body,
+        ];
+        $response = $this->client->post('/api/commands', $options);
+        $response_body = $response->getBody()->getContents();
+
+        $response_data = json_decode($response_body, true);
+
+        if ($response_data[0]['success'] !== true) {
+            throw new \Exception("Shit didn't work yo");
+        }
+
+        return $response_data[0]['result'][0]['fibery/id'] ?? null;
+    }
+
+    /**
+     * @param $timelog_uuid
+     * @param string $time_spent
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function updateTimelog($timelog_uuid, string $time_spent): void
+    {
+        $body = <<<JSON
+[
+  {
+    "command": "fibery.entity/update",
+    "args": {
+      "type": "Projekthantering/Tidlogg",
+      "entity": {
+        "fibery/id": "$timelog_uuid",
+        "Projekthantering/Tidsåtgång": "$time_spent"
+      }
+    }
+  }
+]
+JSON;
+
+        $options = [
+            'headers' => [
+                'Authorization' => 'Token '.getenv('FIBERY_TOKEN'),
+                'Content-Type' => 'application/json',
+            ],
+            'body' => $body,
+        ];
+        $response = $this->client->post('/api/commands', $options);
+        $response_body = $response->getBody()->getContents();
+
+        $response_data = json_decode($response_body, true);
+
+        if ($response_data[0]['success'] !== true) {
+            throw new \Exception("Shit didn't work yo");
+        }
     }
 
 }

@@ -151,8 +151,6 @@ class Event
     /**
      * Get event duration formatted.
      *
-     * @param string $format
-     *
      * @return string
      */
     public function getDurationHours(): string

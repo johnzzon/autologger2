@@ -36,11 +36,15 @@
                         {% endif %}
                     </td>
                     <td>
-                        <div class="harvest-timer"
-                             data-item='{
-                         "id": "{{ event.getJiraIssue }}",
-                         "name": "{{ event.getShortSummary }}"}'>
-                        </div>
+                        {% if not event.isFiberyMoment() %}
+                            <div class="harvest-timer"
+                                 data-item='{
+                                 "id": "{{ event.getJiraIssue }}",
+                                 "name": "{{ event.getShortSummary }}"
+                             }'>
+                            </div>
+                        {% endif %}
+
                     </td>
                     <td class="events__summary">
                         {{ event.getProject }}:

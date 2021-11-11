@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AutologgerController extends AbstractController
 {
-    protected const DATE_FORMAT = 'Y-m-d';
+    private const DATE_FORMAT = 'Y-m-d';
 
     /**
      * @Route("/", name="autologger")
