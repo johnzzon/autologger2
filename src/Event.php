@@ -185,7 +185,7 @@ class Event
     public function getFiberyUrl()
     {
         if ($this->isFiberyMoment()) {
-            return 'https://kodamera.fibery.io/Projekthantering/Moment/'. $this->fiberyMoment;
+            return 'https://kodamera.fibery.io/Kunder_och_projekt/Moment/'. $this->fiberyMoment;
         }
         return FALSE;
     }

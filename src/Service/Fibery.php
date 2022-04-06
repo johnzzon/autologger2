@@ -65,11 +65,11 @@ class Fibery
     "command": "fibery.entity/query",
     "args": {
       "query": {
-        "q/from": "Projekthantering/Moment",
+        "q/from": "Kunder_och_projekt/Moment",
         "q/select": [
           "fibery/id",
           "fibery/public-id",
-          "Projekthantering/name"
+          "Kunder_och_projekt/name"
         ],
         "q/where": [
           "=",
@@ -125,15 +125,15 @@ JSON;
   {
     "command": "fibery.entity/create",
     "args": {
-      "type": "Projekthantering/Tidlogg",
+      "type": "Kunder_och_projekt/Tidlogg",
       "entity": {
-        "Projekthantering/Tidsåtgång": "$time_spent",
-        "Projekthantering/Dag": "$date",
-        "Projekthantering/name": "Autolog: $message",
-        "Projekthantering/user": {
+        "Kunder_och_projekt/Tidsåtgång": "$time_spent",
+        "Kunder_och_projekt/Dag": "$date",
+        "Kunder_och_projekt/name": "Autolog: $message",
+        "Kunder_och_projekt/user": {
           "fibery/id": "$fibery_user"
         },
-        "Projekthantering/Moment": {
+        "Kunder_och_projekt/Moment": {
           "fibery/id": "$moment_uuid"
         }
       }
@@ -174,19 +174,19 @@ JSON;
     "command": "fibery.entity/query",
     "args": {
       "query": {
-        "q/from": "Projekthantering/Tidlogg",
+        "q/from": "Kunder_och_projekt/Tidlogg",
         "q/select": [
           "fibery/id",
-          "Projekthantering/Beräknade timmar",
-          "Projekthantering/Dag",
-          "Projekthantering/name"
+          "Kunder_och_projekt/Beräknade timmar",
+          "Kunder_och_projekt/Dag",
+          "Kunder_och_projekt/name"
         ],
         "q/where": [
           "q/and",
-          ["=", [ "Projekthantering/user", "fibery/id" ], "\$user"],
-          ["=", [ "Projekthantering/Moment", "fibery/id"], "\$moment"],
-          ["=", [ "Projekthantering/Dag"], "\$day"],
-          ["=", [ "Projekthantering/name"], "\$message"]
+          ["=", [ "Kunder_och_projekt/user", "fibery/id" ], "\$user"],
+          ["=", [ "Kunder_och_projekt/Moment", "fibery/id"], "\$moment"],
+          ["=", [ "Kunder_och_projekt/Dag"], "\$day"],
+          ["=", [ "Kunder_och_projekt/name"], "\$message"]
         ],
         "q/limit": 20
       },
@@ -232,10 +232,10 @@ JSON;
   {
     "command": "fibery.entity/update",
     "args": {
-      "type": "Projekthantering/Tidlogg",
+      "type": "Kunder_och_projekt/Tidlogg",
       "entity": {
         "fibery/id": "$timelog_uuid",
-        "Projekthantering/Tidsåtgång": "$time_spent"
+        "Kunder_och_projekt/Tidsåtgång": "$time_spent"
       }
     }
   }
