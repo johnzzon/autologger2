@@ -87,6 +87,10 @@ class Event
         return $this->uuid;
     }
 
+    public function getDate(): DateTimeInterface {
+        return $this->startDate;
+    }
+
     /**
      * @return string
      */
