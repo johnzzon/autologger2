@@ -159,7 +159,9 @@ class EventManager
             $weeks[$week_date->format('Y-m-d')][] = $event;
         }
 
-        return array_reverse($weeks);
+        ksort($weeks);
+
+        return $weeks;
     }
 
 }

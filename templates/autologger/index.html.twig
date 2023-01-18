@@ -18,7 +18,8 @@
                         {% if event.isJiraIssue() %}
                             {% set jira_query_params = {
                                 'duration': event.getDurationFormatted('%hh %im'),
-                                'jira': event.getJiraIssue()
+                                'jira': event.getJiraIssue(),
+                                'message': event.summaryMessage
                             } %}
                             <a target="_blank"
                                href="{{ path('time_log', jira_query_params) }}">⏱</a>
@@ -36,14 +37,12 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if not event.isFiberyMoment() %}
-                            <div class="harvest-timer"
-                                 data-item='{
-                                 "id": "{{ event.getJiraIssue }}",
-                                 "name": "{{ event.getShortSummary }}"
-                             }'>
-                            </div>
-                        {% endif %}
+                        <div class="harvest-timer"
+                             data-item='{
+                             "id": "{{ event.getJiraIssue }}",
+                             "name": "{{ event.harvestMessage }}"
+                         }'>
+                        </div>
 
                     </td>
                     <td class="events__summary">

@@ -5,6 +5,7 @@ namespace App;
 use DateInterval;
 use DateTime;
 use DateTimeInterface;
+use JiraRestApi\Issue\IssueService;
 use Sabre\VObject\Component\VEvent;
 
 class Event
@@ -91,6 +92,21 @@ class Event
         return $this->startDate;
     }
 
+    public function getJiraTitle(): string
+    {
+        $issueService = new IssueService();
+
+        $queryParams = [
+            'fields' => [
+                'summary',
+            ],
+        ];
+
+        $issue = $issueService->get($this->jiraIssue, $queryParams);
+
+        return $issue->fields->summary;
+    }
+
     /**
      * @return string
      */
@@ -112,7 +128,15 @@ class Event
      */
     public function getSummaryMessage(): string
     {
-       return preg_replace('/^#\d+\s/', '', $this->getShortSummary());
+       return preg_replace('/^(#\d+)\s|(?<jira>[A-Z\d]+-[\d]+)\s/', '', $this->getShortSummary());
+    }
+
+    public function getHarvestMessage(): string
+    {
+        if ($this->isJiraIssue()) {
+            return "{$this->jiraIssue}: {$this->getJiraTitle()}";
+        }
+        return $this->getShortSummary();
     }
 
     /**

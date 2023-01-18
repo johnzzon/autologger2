@@ -39,7 +39,8 @@ class TimeLogController extends AbstractController
                 $worklog = new Worklog();
 
                 $worklog->setStarted(new DateTime())
-                    ->setTimeSpent($duration);
+                    ->setTimeSpent($duration)
+                    ->setComment($request->query->get('message'));
 
                 $issue_service = new IssueService();
 
