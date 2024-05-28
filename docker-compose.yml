@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: app.dockerfile
+    ports:
+      - "8000:80"
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www/html:cached
